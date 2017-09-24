@@ -31,12 +31,6 @@ def anagramTest(s, t):
 # print("Test4: non-anagram strings of equal length. Expected outcome False2")
 # anagramTest("made", "male")
 
-# def palindromeTest(s):
-# 	# if s[::-1] == s:
-# 	# 	print("True "+s+" is a palindrome")
-# 	# else:
-# 	# 	print("False"+s+" is not a palindrome")
-# 	return s[::-1] == s
 
 # print("palindromeTest1: expected outcome true")
 # palindromeTest("racecar")
@@ -68,61 +62,47 @@ def question1(s, t):
 # print("Q1 Test1: expected outcome true")
 # question1("udacity", "ad")
 #s = s[ beginning : beginning + LENGTH]
+
+def isPalindrome(s):
+	if s[::-1] == s:
+		print("True "+s+" is a palindrome")
+	else:
+		print("False "+s+" is not a palindrome")
+	return s[::-1] == s
+
+
+
+
 ### QUESTION2: give a string s, what is the longest panindromic substring (lps) of s?
 def question2(s):
 	lps = ""
 	#check if s is a string
 	if type(s) != str:
-		print("False: non-string input")
-		return False
+		print("Error: non-string input")
+		return "Error: non-string input"
 	elif len(s)<2:
 		print("True: input length is 1 or 0")
 		return s
 	else:
-		for i in range(0, len(s)-2):
-			print("i is now "+str(i))
-			#if two letters in a row are the same, go outward 
-			#and see if palindromic pattern continues
-			if s[i] == s[i+1]:
-				print(s[i]+"is equal to"+s[i+1])
-				if len(s[i:i+1])>len(lps):
-					print("lps is now "+s[i:i+2])
-					lps = s[i:i+2]
-				low = i - 1
-				high = i + 2
-				while low >= 0 and high < len(s):
-					if s[low] == s [high]:
-						if len(s[low:high-low])>len(lps):
-							print("lps is now "+ s[low:high-low])
-							lps = s[low:high-low]
-						low -= 1
-						high += 1
-					
-			#if a letter is the same as the letter two letters after, go outward 
-			#and see if palindromic pattern continues
-			elif s[i] == s[i+2]:
-				if len(s[i:i+3])>len(lps):
-					print("1lps is now "+s[i:i+3])
-					lps = s[i:i+2]
-				low = i - 1
-				high = i + 3
-				while low >= 0 and high < len(s):
-					if s[low] == s [high]:
-						if len(s[low:high-low])>len(lps):
-							print("2lps is now "+ s[low:high-low+2])
-							lps = s[low:high-low+2]
-						low -= 1
-						high += 1
-
+		length = len(s)
+		substrings = []
+		for x in range(0, length):
+			for y in range(x, length):
+				if isPalindrome(s[x:y + 1]) and len(s[x:y + 1]) > len(lps):
+					lps = s[x:y + 1]
+				# print("adding "+s[x:y + 1]+" to substring array")
+				# substrings.append(s[x:y + 1])
 		print("lps is "+lps)
 		return lps
 
 #test 1, should return and print "racecar"
-question2("adcdkja;sjdloqSSKCracecar driver")
+question2("driver racecarsdsadasgfdhgfsdsadsfgfdgjhgkguliuseweadsdadfghf")
 
 
-
-
+## QUESTION 3: Find minimum spanning tree of a graph
+graph = {
+	
+}
 
 
 
