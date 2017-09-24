@@ -54,8 +54,8 @@ def question1(s, t):
 				print('t contains letters not in s')
 				return False
 		#if all above tests pass, get char counts for both strings
-		charCount_s = getCharCount(s)
-		charCount_t = getCharCount(t)
+		# charCount_s = getCharCount(s)
+		# charCount_t = getCharCount(t)
 		#for each len(t) long substring of s, run anagram test
 		for i in range(0, len(s)):
 			if anagramTest(t, s[i:i+len(t)]):
@@ -109,15 +109,17 @@ def question2(s):
 				while low >= 0 and high < len(s):
 					if s[low] == s [high]:
 						if len(s[low:high-low])>len(lps):
-							print("2lps is now "+ s[low:high-low])
-							lps = s[low:high-low]
+							print("2lps is now "+ s[low:high-low+2])
+							lps = s[low:high-low+2]
 						low -= 1
 						high += 1
 
 		print("lps is "+lps)
 		return lps
 
-question2("racecar driver")
+#test 1, should return and print "racecar"
+question2("adcdkja;sjdloqSSKCracecar driver")
+
 
 
 
