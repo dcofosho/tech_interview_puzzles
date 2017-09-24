@@ -102,14 +102,14 @@ def question2(s):
 			#and see if palindromic pattern continues
 			elif s[i] == s[i+2]:
 				if len(s[i:i+3])>len(lps):
-					print("lps is now "+s[i:i+3])
+					print("1lps is now "+s[i:i+3])
 					lps = s[i:i+2]
 				low = i - 1
 				high = i + 3
 				while low >= 0 and high < len(s):
 					if s[low] == s [high]:
 						if len(s[low:high-low])>len(lps):
-							print("lps is now "+ s[low:high-low])
+							print("2lps is now "+ s[low:high-low])
 							lps = s[low:high-low]
 						low -= 1
 						high += 1
