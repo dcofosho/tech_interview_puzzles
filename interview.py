@@ -137,6 +137,17 @@ def isGraph(g):
 
 #print("is g a graph?: "+str(isGraph(graph)))
 
+#remove weights function removes weights from the adjacency list
+def removeWeights(g):
+    unweightedGraph = {}
+    keys = list(g.keys())
+    for key in keys:
+        unweightedGraph[key] = []
+        edges = g[key]
+        for edge in edges:
+            unweightedGraph[key].append(edge[0])
+    print("unweightedGraph: "+str(unweightedGraph))
+    return unweightedGraph
 
 ## listEdges function takes a graph g as input and returns the edges as a list tuples in the format (node1, node2, weight of edge), and filters out redundant nodes. Sorts by weight from low to high
 def listEdges(g):
@@ -148,8 +159,8 @@ def listEdges(g):
 					edges.append((key, g[key][i][0], g[key][i][1]))
 	return sorted(edges, key=lambda x:x[2])
 
-#print(str(listEdges(graph)))
-#print("num edges equals "+str(len(listEdges(graph))))
+print(str(listEdges(graph)))
+print("num edges equals "+str(len(listEdges(graph))))
 
 #removes weight value from tuples returned by listEdges function
 def unweightedEdges(l):
@@ -162,23 +173,43 @@ def unweightedEdges(l):
 #print(str(unweightedEdges(listEdges(graph))))
 #print("num edges equals "+str(len(unweightedEdges(listEdges(graph)))))
 
-## hasCycles function takes in a list of tuples representing edges (as output by the listEdges function) and returns true if the edges produce a graph with cycles, otherwise returns false.
-# Iterates through each tuple and adds the nodes to a list of visted nodes
-def hasCycles(l):
-	visitedNodes=[]
-	for edge in l:
-		if edge[0] in visitedNodes and edge[1] in visitedNodes:
-			print("This edge connects 2 previously visited nodes. Therefore, a cycle exists. Return True.")
-			return True
-		elif edge[0] not in visitedNodes:
-			print(str(edge[0])+" is being added to visited nodes")
-			visitedNodes.append(edge[0])
-		elif edge[1] not in visitedNodes:
-			print(str(edge[1])+" is being added to visited nodes")
-			visitedNodes.append(edge[1])
-		print("Visited Nodes: "+str(visitedNodes))
-	print("No nodes were found to connect to more than 1 other node. No cycles exist")
-	return False
+#takes graph and returns boolean indicating presence of cycles
+def hasCycles(g):
+    keys = list(g.keys())
+    print(str(keys))
+    unweightedGraph=removeWeights(g)
+    print(str(unweightedGraph))
+    #initialize current node
+    currentNode = keys[0]
+    stack = [currentNode]
+    print("initial stack: "+str(stack))
+    while len(stack)>0:
+        connectedNodes = unweightedGraph[currentNode]
+        #if all nodes connected to the current node are already in the list, pop the current node from the stack
+        if len(list(set(connectedNodes).intersection(stack))) == len(connectedNodes):
+            print("stack: "+str(stack))
+            print("popping from the stack")
+            stack.pop()
+            print("stack: "+str(stack))
+        #if the current node is connected to 2 or more already-visited nodes, there is a cycle. Return True.
+        elif (len(list(set(connectedNodes).intersection(stack)))) >= 2:
+            print("cycle found between "+str(currentNode)+"and "+str(list(set(connectedNodes).intersection(stack))))
+            return True
+        #otherwise, go through connected nodes until you get to one not in the stack, and move on to that node
+        else:
+            for node in connectedNodes:
+                if node not in stack:
+                    print("current node is now "+str(node))
+                    currentNode = node
+                    print("stack: "+str(stack))
+                    print("appending current node to stack")
+                    stack.append(currentNode)
+                    print("stack: "+str(stack))
+    print("No cycles found")
+    return False
+
+hasCycles(graph)
+
 
 #hasCycles(listEdges(graph))
 
@@ -198,7 +229,6 @@ def kuslakMST(g):
 		return False
 	else:
 		edges = listEdges(g)
-		verticies = list(g.keys())
 		print("Edges: "+str(edges))
 		if not hasCycles(edges):
 			print("The graph does not have cycles, return entire graph")
@@ -208,18 +238,17 @@ def kuslakMST(g):
 			mstEdges = []
 			for edge in edges:
 				print("Currently looking at edge: "+str(edge))
-				for vertex in verticies:
-					if edge[0] in visitedNodes and edge[1] in visitedNodes:
-						print("both "+str(edge[0])+"and "+str(edge[1])+" are in visitedNodes. Therefore adding this edge would create a cycle. Pass over this edge")
-						pass
-					else:
-						print("appending nodes to visitedNodes and edge to mstEdges")
-						visitedNodes.append(edge[0])
-						visitedNodes.append(edge[1])
-						print("Visited Nodes: "+str(visitedNodes))
-						mstEdges.append(edge)
-						print("mstEdges: "+str(mstEdges))
+				if edge[0] in visitedNodes and edge[1] in visitedNodes:
+					print("both "+str(edge[0])+"and "+str(edge[1])+" are in visitedNodes. Therefore adding this edge would create a cycle. Pass over this edge")
+					pass
+				else:
+					print("appending nodes to visitedNodes and edge to mstEdges")
+					visitedNodes.append(edge[0])
+					visitedNodes.append(edge[1])
+					print("Visited Nodes: "+str(visitedNodes))
+					mstEdges.append(edge)
+					print("mstEdges: "+str(mstEdges))
 			print("Final mst edges: "+str(mstEdges))
 			return mstEdges
 
-kuslakMST(graph)
+#kuslakMST(graph)
