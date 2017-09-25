@@ -103,6 +103,7 @@ def question2(s):
 
 ##a nice, reasonably complex graph to test with. Source http://www.geeksforgeeks.org/greedy-algorithms-set-2-kruskals-minimum-spanning-tree-mst/
 graph = {
+	0:[(1,4),(7,8)],
 	1:[(2,8),(0,4),(7,11)],
 	2:[(1,8),(3,7),(5,4),(8,2)],
 	3:[(2,7),(5,14),(4,9)],
@@ -137,7 +138,7 @@ def isGraph(g):
 #print("is g a graph?: "+str(isGraph(graph)))
 
 
-## listEdges function takes a graph g as input and returns the edges as a list tuples in the format (node1, node2, weight of edge), and filters out redundant nodes.
+## listEdges function takes a graph g as input and returns the edges as a list tuples in the format (node1, node2, weight of edge), and filters out redundant nodes. Sorts by weight from low to high
 def listEdges(g):
 	edges = []
 	for node in g:
@@ -145,46 +146,25 @@ def listEdges(g):
 			for i in range(0, len(g[key])):
 				if (g[key][i][0], key, g[key][i][1]) not in edges and (key, g[key][i][0], g[key][i][1]) not in edges:
 					edges.append((key, g[key][i][0], g[key][i][1]))
-	return edges
-	
-#Same as above but sorts by weight from low to high
-def listEdges2(g):
-	edges = []
-	for node in g:
-		for key in g:
-			for i in range(0, len(g[key])):
-				if (g[key][i][0], key, g[key][i][1]) not in edges and (key, g[key][i][0], g[key][i][1]) not in edges:
-					edges.append((key, g[key][i][0], g[key][i][1]))
 	return sorted(edges, key=lambda x:x[2])
-print(str(listEdges2(graph)))
-print("num edges equals "+str(len(listEdges2(graph))))
 
-## hasCycles function takes in a graph and returns true if the edges produce a graph with cycles, otherwise returns false.
-# Iterates through each key value pair in the dict, and adds the key to a list of visited nodes. Then, checks how many edges in the value connected to visited nodes.
-# If the number is ever greater than 2, return true.
-def hasCycles1(g):
-	visitedNodes = []
-	for node in g:
-		print("Current dict key: "+str(node))
-		print("Current dict value: "+str(g[node]))
-		visitedNodes.append(node)
-		print("Visited nodes: "+str(visitedNodes))
-		numConnectedVisitedNodes = 0
-		for edge in g[node]:
-			if edge[0] in visitedNodes:
-				print(str(edge[0])+"is in visitedNodes")
-				numConnectedVisitedNodes += 1
-				print("number of visited nodes connected to the current node now equal to "+str(numConnectedVisitedNodes))
-		if numConnectedVisitedNodes > 2:
-			print("This node connects to 2 previously visited nodes. Therefore, a cycle exists. Return True.")
-			return True
-	print("No nodes were found to connect to more than 1 other node. No cycles exist")
-	return False
+#print(str(listEdges(graph)))
+#print("num edges equals "+str(len(listEdges(graph))))
 
-#hasCycles1(graph)
+#removes weight value from tuples returned by listEdges function
+def unweightedEdges(l):
+	unweightedEdges = []
+	for edge in l:
+		unweightedEdges.append((edge[0],edge[1]))
+	print("Unweighted Edges: "+str(unweightedEdges))
+	return unweightedEdges
 
-#same as function 1, but takes graph in the format output by my "List edges" function.
-def hasCycles2(l):
+#print(str(unweightedEdges(listEdges(graph))))
+#print("num edges equals "+str(len(unweightedEdges(listEdges(graph)))))
+
+## hasCycles function takes in a list of tuples representing edges (as output by the listEdges function) and returns true if the edges produce a graph with cycles, otherwise returns false.
+# Iterates through each tuple and adds the nodes to a list of visted nodes
+def hasCycles(l):
 	visitedNodes=[]
 	for edge in l:
 		if edge[0] in visitedNodes and edge[1] in visitedNodes:
@@ -194,15 +174,52 @@ def hasCycles2(l):
 			print(str(edge[0])+" is being added to visited nodes")
 			visitedNodes.append(edge[0])
 		elif edge[1] not in visitedNodes:
-			print(str(edge[1]+" is being added to visited nodes"))
+			print(str(edge[1])+" is being added to visited nodes")
 			visitedNodes.append(edge[1])
 		print("Visited Nodes: "+str(visitedNodes))
 	print("No nodes were found to connect to more than 1 other node. No cycles exist")
 	return False
 
-hasCycles2(listEdges2(graph))
+#hasCycles(listEdges(graph))
+
+# given 2 verticies x and y in adjacency tree g, determine if they are connected
+def isConnected(x, y, g):
+	for edge in g[x]:
+		if edge[0] == y or edge[1] == y:
+			print(str(x)+" is connected to "+str(y))
+			return True
+	print("Not connected")
+	return False
+#isConnected(1, 2, graph)
 
 def kuslakMST(g):
 	if not isGraph(g):
 		print("Error: input is not a properly formatted graph")
 		return False
+	else:
+		edges = listEdges(g)
+		verticies = list(g.keys())
+		print("Edges: "+str(edges))
+		if not hasCycles(edges):
+			print("The graph does not have cycles, return entire graph")
+			return g
+		else:
+			visitedNodes = []
+			mstEdges = []
+			for edge in edges:
+				print("Currently looking at edge: "+str(edge))
+				for vertex in verticies:
+					if edge[0] in visitedNodes and edge[1] in visitedNodes:
+						print("both "+str(edge[0])+"and "+str(edge[1])+" are in visitedNodes. Therefore adding this edge would create a cycle. Pass over this edge")
+						pass
+					else:
+						print("appending nodes to visitedNodes and edge to mstEdges")
+						visitedNodes.append(edge[0])
+						visitedNodes.append(edge[1])
+						print("Visited Nodes: "+str(visitedNodes))
+						mstEdges.append(edge)
+						print("mstEdges: "+str(mstEdges))
+			print("Final mst edges: "+str(mstEdges))
+			return mstEdges
+
+kuslakMST(graph)
