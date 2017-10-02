@@ -101,19 +101,6 @@ def question2(s):
 
 ## QUESTION 3: Find minimum spanning tree of a graph
 
-##a nice, reasonably complex graph to test with. Source http://www.geeksforgeeks.org/greedy-algorithms-set-2-kruskals-minimum-spanning-tree-mst/
-graph = {
-	0:[(1,4),(7,8)],
-	1:[(2,8),(0,4),(7,11)],
-	2:[(1,8),(3,7),(5,4),(8,2)],
-	3:[(2,7),(5,14),(4,9)],
-	4:[(3,9),(5,10)],
-	5:[(4,10),(3,14),(2,4),(6,2)],
-	6:[(8,6),(5,2),(7,1)],
-	7:[(6,1),(8,7),(1,11),(0,8)],
-	8:[(7,7),(6,6),(2,2)]
-}
-
 ### isGraph function takes in a dictionary and determines whether it fits the format of a graph adjacency list as defined in the udacity assignment. Should return true for the above test graph.
 def isGraph(g):
 	if type(g) != dict:
@@ -135,120 +122,91 @@ def isGraph(g):
 						return False
 	return True
 
-#print("is g a graph?: "+str(isGraph(graph)))
+##a nice, reasonably complex graph to test with. Source http://www.geeksforgeeks.org/greedy-algorithms-set-2-kruskals-minimum-spanning-tree-mst/
+graph = {
+    0:[(1,4),(7,8)],
+    1:[(2,8),(0,4),(7,11)],
+    2:[(1,8),(3,7),(5,4),(8,2)],
+    3:[(2,7),(5,14),(4,9)],
+    4:[(3,9),(5,10)],
+    5:[(4,10),(3,14),(2,4),(6,2)],
+    6:[(8,6),(5,2),(7,1)],
+    7:[(6,1),(8,7),(1,11),(0,8)],
+    8:[(7,7),(6,6),(2,2)]
+}
 
-#remove weights function removes weights from the adjacency list
-def removeWeights(g):
-    unweightedGraph = {}
-    keys = list(g.keys())
-    for key in keys:
-        unweightedGraph[key] = []
-        edges = g[key]
-        for edge in edges:
-            unweightedGraph[key].append(edge[0])
-    print("unweightedGraph: "+str(unweightedGraph))
-    return unweightedGraph
+graphMST = {
+    0:[(1,4),(7,8)],
+    1:[(0,4)],
+    2:[(3,7),(5,4),(8,2)],
+    3:[(2,7),(4,9)],
+    4:[(3,9)],
+    5:[(2,4),(6,2)],
+    6:[(5,2),(7,1)],
+    7:[(6,1),(0,8)],
+    8:[(2,2)]
+}
 
-## listEdges function takes a graph g as input and returns the edges as a list tuples in the format (node1, node2, weight of edge), and filters out redundant nodes. Sorts by weight from low to high
-def listEdges(g):
-	edges = []
-	for node in g:
-		for key in g:
-			for i in range(0, len(g[key])):
-				if (g[key][i][0], key, g[key][i][1]) not in edges and (key, g[key][i][0], g[key][i][1]) not in edges:
-					edges.append((key, g[key][i][0], g[key][i][1]))
-	return sorted(edges, key=lambda x:x[2])
-
-print(str(listEdges(graph)))
-print("num edges equals "+str(len(listEdges(graph))))
-
-#removes weight value from tuples returned by listEdges function
-def unweightedEdges(l):
-	unweightedEdges = []
-	for edge in l:
-		unweightedEdges.append((edge[0],edge[1]))
-	print("Unweighted Edges: "+str(unweightedEdges))
-	return unweightedEdges
-
-#print(str(unweightedEdges(listEdges(graph))))
-#print("num edges equals "+str(len(unweightedEdges(listEdges(graph)))))
-
-#takes graph and returns boolean indicating presence of cycles
-def hasCycles(g):
-    keys = list(g.keys())
-    print(str(keys))
-    unweightedGraph=removeWeights(g)
-    print(str(unweightedGraph))
-    #initialize current node
-    currentNode = keys[0]
-    stack = [currentNode]
-    print("initial stack: "+str(stack))
-    while len(stack)>0:
-        connectedNodes = unweightedGraph[currentNode]
-        #if all nodes connected to the current node are already in the list, pop the current node from the stack
-        if len(list(set(connectedNodes).intersection(stack))) == len(connectedNodes):
-            print("stack: "+str(stack))
-            print("popping from the stack")
-            stack.pop()
-            print("stack: "+str(stack))
-        #if the current node is connected to 2 or more already-visited nodes, there is a cycle. Return True.
-        elif (len(list(set(connectedNodes).intersection(stack)))) >= 2:
-            print("cycle found between "+str(currentNode)+"and "+str(list(set(connectedNodes).intersection(stack))))
-            return True
-        #otherwise, go through connected nodes until you get to one not in the stack, and move on to that node
-        else:
-            for node in connectedNodes:
-                if node not in stack:
-                    print("current node is now "+str(node))
-                    currentNode = node
-                    print("stack: "+str(stack))
-                    print("appending current node to stack")
-                    stack.append(currentNode)
-                    print("stack: "+str(stack))
-    print("No cycles found")
-    return False
-
-hasCycles(graph)
-
-
-#hasCycles(listEdges(graph))
-
-# given 2 verticies x and y in adjacency tree g, determine if they are connected
-def isConnected(x, y, g):
-	for edge in g[x]:
-		if edge[0] == y or edge[1] == y:
-			print(str(x)+" is connected to "+str(y))
-			return True
-	print("Not connected")
-	return False
-#isConnected(1, 2, graph)
-
-def kuslakMST(g):
+# Question3: Find minimum spanning tree for undirected weighted graph
+def question3(g):
+	#check that the input is a properly formatted graph adjacency tree
 	if not isGraph(g):
-		print("Error: input is not a properly formatted graph")
+		print("The input graph is not properly formatted")
 		return False
-	else:
-		edges = listEdges(g)
-		print("Edges: "+str(edges))
-		if not hasCycles(edges):
-			print("The graph does not have cycles, return entire graph")
-			return g
+	#get node set
+	nodes = g.keys()
+	print("Nodes: "+str(nodes))
+	#get edge set
+	edges = set()
+	for x in nodes:
+		for y in g[x]:
+			if x > y[0]:
+				edges.add((y[1], y[0], x))
+			elif x < y[0]:
+				edges.add((y[1], x, y[0]))
+	# sort edges
+	edges = sorted(list(edges))
+	print("edges: "+str(edges))
+	# loop through edges and store only those which do not create cycles with disjoin set/union find algorithm
+	mst_edges = []
+	x = 0
+	nodes = list(nodes)
+	for node in nodes:
+		nodes[x] = set([node])
+		print(str(nodes))
+		x += 1
+	print(str(nodes))
+	for x in edges:
+		# get indices of both nodes
+		for y in range(0, len(nodes)):
+			if x[1] in nodes[y]:
+				x1 = y
+			if x[2] in nodes[y]:
+				x2 = y
+		# Store union in the smaller index and pop the larger. Append edge to mst_edges
+		if x1 < x2:
+			nodes[x1] = set.union(nodes[x1], nodes[x2])
+			nodes.pop(x2)
+			mst_edges.append(x)
+		if x1 > x2:
+			nodes[x2] = set.union(nodes[x1], nodes[x2])
+			nodes.pop(x1)
+			mst_edges.append(x)
+		# break loop when all nodes are in one graph
+		if len(nodes) == 1:
+			break
+	#  put mst in proper format
+	mst = {}
+	for x in mst_edges:
+		if x[1] in mst:
+			mst[x[1]].append((x[2], x[0]))
 		else:
-			visitedNodes = []
-			mstEdges = []
-			for edge in edges:
-				print("Currently looking at edge: "+str(edge))
-				if edge[0] in visitedNodes and edge[1] in visitedNodes:
-					print("both "+str(edge[0])+"and "+str(edge[1])+" are in visitedNodes. Therefore adding this edge would create a cycle. Pass over this edge")
-					pass
-				else:
-					print("appending nodes to visitedNodes and edge to mstEdges")
-					visitedNodes.append(edge[0])
-					visitedNodes.append(edge[1])
-					print("Visited Nodes: "+str(visitedNodes))
-					mstEdges.append(edge)
-					print("mstEdges: "+str(mstEdges))
-			print("Final mst edges: "+str(mstEdges))
-			return mstEdges
+			mst[x[1]] = [(x[2], x[0])]
+		if x[2] in mst:
+			mst[x[2]].append((x[1], x[0]))
+		else:
+			mst[x[2]] = [(x[1], x[0])]
+	print(str(mst))
+	return mst
 
-#kuslakMST(graph)
+question3(graph)
