@@ -9,7 +9,7 @@ def getCharCount(s):
 
 def anagramTest(s, t):
 	if type(s) != str or type(t) != str or len(s) == 0 or len(s) != len(t):
-		print('False: input error')
+		#print('False: input error')
 		return False
 	else:
 		charCount_s = getCharCount(s)
@@ -17,7 +17,7 @@ def anagramTest(s, t):
 		if charCount_s == charCount_t:
 			print('True: '+s+" is an anagram of "+t)
 			return True
-		print('False:'+s+" is not an anagram of "+t)
+		#print('False:'+s+" is not an anagram of "+t)
 		return False
 # print("Test1: Expected outcome True")
 # anagramTest("made", "mead")
@@ -39,13 +39,13 @@ def anagramTest(s, t):
 def question1(s, t):
 	#check that s and t are strings, and s is longer than t
 	if type(s) != str or type(t) != str or len(s) < len(t):
-		print('False1')
+		print('False: Improperly formated input')
 		return False
 	else:
 		#check if t contains letters not found in s
 		for char in t:
 			if char not in s:
-				print('t contains letters not in s')
+				print('False: t contains letters not in s')
 				return False
 		#if all above tests pass, get char counts for both strings
 		# charCount_s = getCharCount(s)
@@ -59,15 +59,21 @@ def question1(s, t):
 		#if all anagram tests fail, return false
 		return False
 
-# print("Q1 Test1: expected outcome true")
-# question1("udacity", "ad")
+def testQ1():
+	print("Q1 Test1: expected outcome True")
+	question1("udacity", "ad")
+	print("Q1 Test2: expected outcome False")
+	question1("udacity", "aj")
+	print("Q1 Test3: expected outcome False")
+	question1("udacity", 2)
 #s = s[ beginning : beginning + LENGTH]
+testQ1()
 
 def isPalindrome(s):
-	if s[::-1] == s:
-		print("True "+s+" is a palindrome")
-	else:
-		print("False "+s+" is not a palindrome")
+	# if s[::-1] == s:
+	# 	print("True "+s+" is a palindrome")
+	# else:
+	# 	print("False "+s+" is not a palindrome")
 	return s[::-1] == s
 
 
@@ -95,29 +101,34 @@ def question2(s):
 		print("lps is "+lps)
 		return lps
 
-#test 2, should return and print "racecar"
-#question2("driver racecarsdsadasgfdhgfsdsadsfgfdgjhgkguliuseweadsdadfghf")
+def testQ2():
+	print("Q2 test 1, should print 'lps is racecar'")
+	question2("driver racecarsdsadasgfdhgfsdsadsfgfdgjhgkguliuseweadsdadfghf")
+	print("Q2 test 2, should print 'lps is dad'")
+	question2("dad173123")
+	print("Q2 test 3, should print 'Error: non-string input'")
+	question2(1)
 
-
+testQ2()
 ## QUESTION 3: Find minimum spanning tree of a graph
 
 ### isGraph function takes in a dictionary and determines whether it fits the format of a graph adjacency list as defined in the udacity assignment. Should return true for the above test graph.
 def isGraph(g):
 	if type(g) != dict:
-		print("input is not dict")
+		#print("input is not dict")
 		return False
 	else:
 		for key in graph:
-			print("is type(key) not int?: "+str(type(key) is not int))
+			#print("is type(key) not int?: "+str(type(key) is not int))
 			if type(key) is not int:
 				return False
-			print("is type(g[key]) not array?: "+str(isinstance(type(g[key]), list)))
+			#print("is type(g[key]) not array?: "+str(isinstance(type(g[key]), list)))
 			if isinstance(type(g[key]), list):
 				return False
 			else:
 				for i in range(0, len(g[key])):
-					print("is type(g[key][i]) not tuple?: "+ str(type(g[key][i]) is not tuple))
-					print(str(g[key][i]))
+					#print("is type(g[key][i]) not tuple?: "+ str(type(g[key][i]) is not tuple))
+					#print(str(g[key][i]))
 					if type(g[key][i]) is not tuple:
 						return False
 	return True
@@ -155,7 +166,7 @@ def question3(g):
 		return False
 	#get node set
 	nodes = g.keys()
-	print("Nodes: "+str(nodes))
+	#print("Nodes: "+str(nodes))
 	#get edge set
 	edges = set()
 	for x in nodes:
@@ -166,16 +177,16 @@ def question3(g):
 				edges.add((y[1], x, y[0]))
 	# sort edges
 	edges = sorted(list(edges))
-	print("edges: "+str(edges))
+	#print("edges: "+str(edges))
 	# loop through edges and store only those which do not create cycles with disjoin set/union find algorithm
 	mst_edges = []
 	x = 0
 	nodes = list(nodes)
 	for node in nodes:
 		nodes[x] = set([node])
-		print(str(nodes))
+		#print(str(nodes))
 		x += 1
-	print(str(nodes))
+	#print(str(nodes))
 	for x in edges:
 		# get indices of both nodes
 		for y in range(0, len(nodes)):
@@ -206,9 +217,20 @@ def question3(g):
 			mst[x[2]].append((x[1], x[0]))
 		else:
 			mst[x[2]] = [(x[1], x[0])]
-	print(str(mst))
+	#print(str(graphMST))
+	#print(str(mst))
 	return mst
 
+def testQ3():
+	for key in list(graph.keys()):
+		for edge in question3(graph)[key]:
+			if edge not in graphMST[key]:
+				print("Q3 fail")
+				return False
+		else:
+			print("Q3 pass")
+			return True
+testQ3()
 #question3(graph)
 
 ############ Question 4 #####################
@@ -275,9 +297,9 @@ def question4(r, n1, n2):
 			current_node = current_node.right
 		# If the current node is between n1 and n2, the current node is the lca
 		else:
-			print(str(current_node.value))
+			#print(str(current_node.value))
 			return current_node.value
-	print(str(current_node.value))
+	#print(str(current_node.value))
 	return current_node.value
 
 ####Chain together node objects to construct a tree for test purposes
@@ -300,16 +322,16 @@ n15.left = n10
 n15.right = n16
 
 def test4():
-	print("r not Node type:", "Pass" if "r not properly formatted" == question4(747, 5, 15) else "Fail")
-	print("n1 not int", "Pass" if "n1 not int" == question4(r, "5", 15) else "Fail")
-	print("n2 not int", "Pass" if "n2 not int" == question4(r, 5, "15") else "Fail")
-	print("n1 not in the tree:", "Pass" if "n1 not in tree" == question4(r, 77, 5) else "Fail")
-	print("n1 = 3 and n2 = 15:", "Pass" if 9 == question4(r, 3, 15) else "Fail") 
-	print("n1 = 7 and n2 = 10", "Pass" if 9 == question4(r, 7, 10) else "Fail")
-	print("n1 = 10 and n2 = 16", "Pass" if 15 == question4(r, 10, 16) else "Fail")
-	print("n1 = 5 and n2 = 9", "Pass" if 9 == question4(r, 5, 9) else "Fail")
+	print("Q4 test1: r not Node type:", "Pass" if "r not properly formatted" == question4(747, 5, 15) else "Fail")
+	print("Q4 test2: n1 not int", "Pass" if "n1 not int" == question4(r, "5", 15) else "Fail")
+	print("Q4 test3: n2 not int", "Pass" if "n2 not int" == question4(r, 5, "15") else "Fail")
+	print("Q4 test4: n1 not in the tree:", "Pass" if "n1 not in tree" == question4(r, 77, 5) else "Fail")
+	print("Q4 test5: n1 = 3 and n2 = 15:", "Pass" if 9 == question4(r, 3, 15) else "Fail") 
+	print("Q4 test6: n1 = 7 and n2 = 10", "Pass" if 9 == question4(r, 7, 10) else "Fail")
+	print("Q4 test7: n1 = 10 and n2 = 16", "Pass" if 15 == question4(r, 10, 16) else "Fail")
+	print("Q4 test8: n1 = 5 and n2 = 9", "Pass" if 9 == question4(r, 5, 9) else "Fail")
 
-#test4()
+test4()
 
 #####################Question 5######################
 # Find element in a singly linked list which is m elements from the end.
@@ -342,17 +364,31 @@ n8.next = n9
 n9.next = n10
 
 def question5(n, m):
+	if type(n) != Node:
+		return "n is not a node object"
+	if type(m) != int:
+		return "m is not int"
 	orderedList = []
 	currentNode = n
 	while currentNode != None:
 		try:
 			orderedList.append(currentNode.value)
-			print(str(currentNode.value))
+			#print(str(currentNode.value))
 			currentNode = currentNode.next
 		except:
 			break
-	print("list: "+str(orderedList))
-	print("element which is "+str(m)+" elements from end: "+orderedList[len(orderedList)-m-1])
-	return orderedList[len(orderedList)-m]
+	#print("list: "+str(orderedList))
+	#print("element which is "+str(m)+" elements from end: "+orderedList[len(orderedList)-m-1])
+	return orderedList[len(orderedList)-m-1]
 
-question5(n1, 6)
+def testQ5():
+	print("expected outcome: 'four'")
+	print(str(question5(n1, 6)))
+	print("expected outcome: 'ten'")
+	print(str(question5(n1, 0)))
+	print("expected outcome: 'n is not a node object'")
+	print(str(question5(1, 1)))
+	print("expected outcome: 'm is not int'")
+	print(str(question5(n1, "1")))
+
+testQ5()
