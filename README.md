@@ -12,7 +12,7 @@
 	Question 4: Find the least common ancestor between two nodes on a binary search tree.
 </li>
 <li>
-	Question 5:Find the element in a singly linked list that's m elements from the end.
+	Question 5: Find the element in a singly linked list that's m elements from the end.
 </li>
 
 </ol>
