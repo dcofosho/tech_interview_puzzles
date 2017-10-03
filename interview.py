@@ -17,23 +17,7 @@ def anagramTest(s, t):
 		if charCount_s == charCount_t:
 			print('True: '+s+" is an anagram of "+t)
 			return True
-		#print('False:'+s+" is not an anagram of "+t)
 		return False
-# print("Test1: Expected outcome True")
-# anagramTest("made", "mead")
-
-# print("Test2: different length strings. Expected outcome False1")
-# anagramTest("mader", "mead")
-
-# print("Test3: non-string input. Expected outcome False1")
-# anagramTest(523, "made")
-
-# print("Test4: non-anagram strings of equal length. Expected outcome False2")
-# anagramTest("made", "male")
-
-
-# print("palindromeTest1: expected outcome true")
-# palindromeTest("racecar")
 
 ## QUESTION1: given 2 strings s and t, is some anagram of t a substring of s?
 def question1(s, t):
@@ -47,9 +31,6 @@ def question1(s, t):
 			if char not in s:
 				print('False: t contains letters not in s')
 				return False
-		#if all above tests pass, get char counts for both strings
-		# charCount_s = getCharCount(s)
-		# charCount_t = getCharCount(t)
 		#for each len(t) long substring of s, run anagram test
 		for i in range(0, len(s)):
 			if anagramTest(t, s[i:i+len(t)]):
@@ -70,14 +51,7 @@ def testQ1():
 testQ1()
 
 def isPalindrome(s):
-	# if s[::-1] == s:
-	# 	print("True "+s+" is a palindrome")
-	# else:
-	# 	print("False "+s+" is not a palindrome")
 	return s[::-1] == s
-
-
-
 
 ### QUESTION2: give a string s, what is the longest panindromic substring (lps) of s?
 def question2(s):
@@ -96,8 +70,6 @@ def question2(s):
 			for y in range(x, length):
 				if isPalindrome(s[x:y + 1]) and len(s[x:y + 1]) > len(lps):
 					lps = s[x:y + 1]
-				# print("adding "+s[x:y + 1]+" to substring array")
-				# substrings.append(s[x:y + 1])
 		print("lps is "+lps)
 		return lps
 
@@ -119,16 +91,12 @@ def isGraph(g):
 		return False
 	else:
 		for key in graph:
-			#print("is type(key) not int?: "+str(type(key) is not int))
 			if type(key) is not int:
 				return False
-			#print("is type(g[key]) not array?: "+str(isinstance(type(g[key]), list)))
 			if isinstance(type(g[key]), list):
 				return False
 			else:
 				for i in range(0, len(g[key])):
-					#print("is type(g[key][i]) not tuple?: "+ str(type(g[key][i]) is not tuple))
-					#print(str(g[key][i]))
 					if type(g[key][i]) is not tuple:
 						return False
 	return True
@@ -159,6 +127,7 @@ graphMST = {
 }
 
 # Question3: Find minimum spanning tree for undirected weighted graph
+# Solution inspired by (nothing copied from) GeneDer's solution on Github https://github.com/GeneDer/Technical-Interview/blob/master/Solutions.py
 def question3(g):
 	#check that the input is a properly formatted graph adjacency tree
 	if not isGraph(g):
@@ -166,7 +135,6 @@ def question3(g):
 		return False
 	#get node set
 	nodes = g.keys()
-	#print("Nodes: "+str(nodes))
 	#get edge set
 	edges = set()
 	for x in nodes:
@@ -177,16 +145,13 @@ def question3(g):
 				edges.add((y[1], x, y[0]))
 	# sort edges
 	edges = sorted(list(edges))
-	#print("edges: "+str(edges))
 	# loop through edges and store only those which do not create cycles with disjoin set/union find algorithm
 	mst_edges = []
 	x = 0
 	nodes = list(nodes)
 	for node in nodes:
 		nodes[x] = set([node])
-		#print(str(nodes))
 		x += 1
-	#print(str(nodes))
 	for x in edges:
 		# get indices of both nodes
 		for y in range(0, len(nodes)):
@@ -217,8 +182,6 @@ def question3(g):
 			mst[x[2]].append((x[1], x[0]))
 		else:
 			mst[x[2]] = [(x[1], x[0])]
-	#print(str(graphMST))
-	#print(str(mst))
 	return mst
 
 def testQ3():
@@ -373,12 +336,9 @@ def question5(n, m):
 	while currentNode != None:
 		try:
 			orderedList.append(currentNode.value)
-			#print(str(currentNode.value))
 			currentNode = currentNode.next
 		except:
 			break
-	#print("list: "+str(orderedList))
-	#print("element which is "+str(m)+" elements from end: "+orderedList[len(orderedList)-m-1])
 	return orderedList[len(orderedList)-m-1]
 
 def testQ5():
