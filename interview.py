@@ -95,7 +95,7 @@ def question2(s):
 		print("lps is "+lps)
 		return lps
 
-#test 1, should return and print "racecar"
+#test 2, should return and print "racecar"
 #question2("driver racecarsdsadasgfdhgfsdsadsfgfdgjhgkguliuseweadsdadfghf")
 
 
@@ -212,6 +212,7 @@ def question3(g):
 #question3(graph)
 
 ############ Question 4 #####################
+# Find least common ancestor (LCA) of two nodes in a binary search tree
 # Solution inspired by (nothing copied from) GeneDer's solution on Github https://github.com/GeneDer/Technical-Interview/blob/master/Solutions.py
 # Solution employs a tree data structure which is similar to that shown in the Udacity fsnd videos on trees, rather than the matrix format defined in the question.
 # This solution was employed because this tree data structure is more elegant and easier to traverse than the matrix.
@@ -308,4 +309,50 @@ def test4():
 	print("n1 = 10 and n2 = 16", "Pass" if 15 == question4(r, 10, 16) else "Fail")
 	print("n1 = 5 and n2 = 9", "Pass" if 9 == question4(r, 5, 9) else "Fail")
 
-test4()
+#test4()
+
+#####################Question 5######################
+# Find element in a singly linked list which is m elements from the end.
+class Node(object):
+	def __init__(self, value):
+		self.value = value
+		self.next = Node
+
+#### String together a linked list: ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
+
+n1 = Node("one")
+n2 = Node("two")
+n3 = Node("three")
+n4 = Node("four")
+n5 = Node("five")
+n6 = Node("six")
+n7 = Node("seven")
+n8 = Node("eight")
+n9 = Node("nine")
+n10 = Node("ten")
+
+n1.next = n2
+n2.next = n3
+n3.next= n4
+n4.next = n5
+n5.next = n6
+n6.next = n7
+n7.next = n8
+n8.next = n9
+n9.next = n10
+
+def question5(n, m):
+	orderedList = []
+	currentNode = n
+	while currentNode != None:
+		try:
+			orderedList.append(currentNode.value)
+			print(str(currentNode.value))
+			currentNode = currentNode.next
+		except:
+			break
+	print("list: "+str(orderedList))
+	print("element which is "+str(m)+" elements from end: "+orderedList[len(orderedList)-m-1])
+	return orderedList[len(orderedList)-m]
+
+question5(n1, 6)
