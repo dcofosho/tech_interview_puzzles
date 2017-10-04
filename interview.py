@@ -222,6 +222,10 @@ print("Find Left: "+ str(findLeft([0,0,1,1])))
 def question4(m, r, n1, n2):
 	nodeIndex = r
 	root = m[nodeIndex]
+	print("node index: "+str(r))
+	print("root: "+str(root))
+	print("Left of root: "+str(findLeft(root)))
+	print("Right of root: "+str(findRight(root)))
 	# make sure n1 and n2 are integers
 	if type(n1) != int:
 		return "n1 not int"
@@ -229,32 +233,50 @@ def question4(m, r, n1, n2):
 		return "n2 not int"
 	#Traverse tree starting at root
 	current_node = root
+	print("Node: "+str(current_node))
 	while findLeft(current_node) != None or findRight(current_node) != None: 
-		# if the current node is greater than both n1 and n2, go left
-		if nodeIndex > n1 and nodeIndex > n2:
-			nodeIndex = findLeft(currentNode)
-			current_node = m[nodeIndex]
-		# if the current node is less than both n1 and n2, go left
-		elif nodeIndex < n1 and nodeIndex < n2:
-			nodeIndex = findRight(currentNode)
-			current_node = m[nodeIndex]
-		# If the current node is between n1 and n2, the current node is the lca
-		else:
-			#print(str(current_node.value))
-			return nodeIndex
+		try:
+			# if the current node is greater than both n1 and n2, go left
+			if nodeIndex > n1 and nodeIndex > n2:
+				nodeIndex = findLeft(current_node)
+				current_node = m[nodeIndex]
+				print("Left of node: "+str(findLeft(current_node)))
+			# if the current node is less than both n1 and n2, go left
+			elif nodeIndex < n1 and nodeIndex < n2:
+				print(str(nodeIndex)+" is less than "+str(n1) +" and "+str(n2))
+				nodeIndex = findRight(current_node)
+				current_node = m[nodeIndex]
+			# If the current node is between n1 and n2, the current node is the lca
+			else:
+				print(str(nodeIndex)+" is between "+str(n1) +" and "+str(n2))
+				#print(str(current_node.value))
+				return nodeIndex
+		except:
+			break
 	#print(str(current_node.value))
 	return nodeIndex
 ####Chain together node objects to construct a tree for test purposes
 
 def test4():
-	print("TEST4: Should return 3"+"\n"+str(question4([[0, 1, 0, 0, 0],
-           [0, 0, 0, 0, 0],
-           [0, 0, 0, 0, 0],
-           [1, 0, 0, 0, 1],
-           [0, 0, 0, 0, 0]],
-          3,
-          1,
-          4)))
+	print("Q4 Test 1: LCA is root (should return 3)"+"\n"+str(question4([[0, 1, 0, 0, 0],
+		[0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0],
+		[1, 0, 0, 0, 1],
+		[0, 0, 0, 0, 0]],
+		3,
+		1,
+		4)))
+
+	print("Q4 Test 2: LCA is left of root (should return 2) "+"\n"+str(question4([
+		[0,0,0,0,0,0],
+		[1,0,0,0,0,0],
+		[0,1,0,1,0,0],
+		[0,0,0,0,0,0],
+		[0,0,1,0,0,1],
+		[0,0,0,0,0,0]],
+		4,
+		1,
+		3)))
 
 test4()
 
