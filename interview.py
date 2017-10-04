@@ -301,7 +301,7 @@ test4()
 class Node(object):
 	def __init__(self, value):
 		self.value = value
-		self.next = Node
+		self.next = None
 
 #### String together a linked list: ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
 
@@ -326,20 +326,28 @@ n7.next = n8
 n8.next = n9
 n9.next = n10
 
+def findLength(n):
+	x = 1
+	currentNode = n
+	while currentNode.next != None:
+		currentNode = currentNode.next
+		x += 1
+	return x
+
+print(str(findLength(n1)))
+
 def question5(n, m):
 	if type(n) != Node:
 		return "n is not a node object"
 	if type(m) != int:
 		return "m is not int"
-	orderedList = []
+	lengthList = findLength(n)
 	currentNode = n
-	while currentNode != None:
-		try:
-			orderedList.append(currentNode.value)
-			currentNode = currentNode.next
-		except:
-			break
-	return orderedList[len(orderedList)-m-1]
+	x = 0
+	while x < lengthList - m - 1:		
+		currentNode = currentNode.next
+		x += 1
+	return currentNode.value
 
 def testQ5():
 	print("expected outcome: 'four'")
