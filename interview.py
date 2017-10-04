@@ -90,7 +90,7 @@ def isGraph(g):
 		#print("input is not dict")
 		return False
 	else:
-		for key in graph:
+		for key in g:
 			if type(key) is not int:
 				return False
 			if isinstance(type(g[key]), list):
@@ -102,7 +102,7 @@ def isGraph(g):
 	return True
 
 ##a nice, reasonably complex graph to test with. Source http://www.geeksforgeeks.org/greedy-algorithms-set-2-kruskals-minimum-spanning-tree-mst/
-graph = {
+graph1 = {
     0:[(1,4),(7,8)],
     1:[(2,8),(0,4),(7,11)],
     2:[(1,8),(3,7),(5,4),(8,2)],
@@ -114,7 +114,7 @@ graph = {
     8:[(7,7),(6,6),(2,2)]
 }
 
-graphMST = {
+graph1MST = {
     0:[(1,4),(7,8)],
     1:[(0,4)],
     2:[(3,7),(5,4),(8,2)],
@@ -125,6 +125,14 @@ graphMST = {
     7:[(6,1),(0,8)],
     8:[(2,2)]
 }
+
+graph2 = {1: [(2, 2)],
+ 1: [(1, 2), (3, 5)], 
+ 3: [(2, 5)]}
+
+graph2MST = {1: [(2, 2)],
+ 1: [(1, 2), (3, 5)], 
+ 3: [(2, 5)]}
 
 # Question3: Find minimum spanning tree for undirected weighted graph
 # Solution inspired by (nothing copied from) GeneDer's solution on Github https://github.com/GeneDer/Technical-Interview/blob/master/Solutions.py
@@ -185,14 +193,25 @@ def question3(g):
 	return mst
 
 def testQ3():
-	for key in list(graph.keys()):
-		for edge in question3(graph)[key]:
-			if edge not in graphMST[key]:
-				print("Q3 fail")
-				return False
+	##Test case 1, input graph with cycles
+	for key in list(graph1.keys()):
+		for edge in question3(graph1)[key]:
+			if edge not in graph1MST[key]:
+				print("Q3 Test1 (Graph with cycles): fail")
 		else:
-			print("Q3 pass")
-			return True
+			print("Q3 Test 1 (Graph with cycles): pass")
+	##Test case 2, input graph with no cycles
+	for key in list(graph2.keys()):
+		for edge in question3(graph2)[key]:
+			if edge not in graph2MST[key]:
+				print("Q3 Test2 (Graph without cycles): fail")
+		else:
+			print("Q3 Test2 (Graph without cycles): pass")
+	##Test case 3, non graph input
+	if not question3(0):
+		print("Q3 Test3 (non-graph input): Pass")
+	else:
+		print("Q3 Test3 (non-graph input): Fail")
 testQ3()
 #question3(graph)
 
@@ -222,10 +241,6 @@ print("Find Left: "+ str(findLeft([0,0,1,1])))
 def question4(m, r, n1, n2):
 	nodeIndex = r
 	root = m[nodeIndex]
-	print("node index: "+str(r))
-	print("root: "+str(root))
-	print("Left of root: "+str(findLeft(root)))
-	print("Right of root: "+str(findRight(root)))
 	# make sure n1 and n2 are integers
 	if type(n1) != int:
 		return "n1 not int"
@@ -240,20 +255,15 @@ def question4(m, r, n1, n2):
 			if nodeIndex > n1 and nodeIndex > n2:
 				nodeIndex = findLeft(current_node)
 				current_node = m[nodeIndex]
-				print("Left of node: "+str(findLeft(current_node)))
 			# if the current node is less than both n1 and n2, go left
 			elif nodeIndex < n1 and nodeIndex < n2:
-				print(str(nodeIndex)+" is less than "+str(n1) +" and "+str(n2))
 				nodeIndex = findRight(current_node)
 				current_node = m[nodeIndex]
 			# If the current node is between n1 and n2, the current node is the lca
 			else:
-				print(str(nodeIndex)+" is between "+str(n1) +" and "+str(n2))
-				#print(str(current_node.value))
 				return nodeIndex
 		except:
 			break
-	#print(str(current_node.value))
 	return nodeIndex
 ####Chain together node objects to construct a tree for test purposes
 
@@ -277,6 +287,18 @@ def test4():
 		4,
 		1,
 		3)))
+
+	print("Q4 Test 3: LCA is right of root (should return 4): "+"\n"+str(question4([
+		[0,0,0,0,0,0],
+		[1,0,0,0,0,0],
+		[0,0,0,0,0,0],
+		[0,1,0,0,1,0],
+		[0,0,1,0,0,1],
+		[0,0,0,0,0,0]
+		],
+		3,
+		4,
+		5)))
 
 test4()
 
@@ -334,13 +356,13 @@ def question5(n, m):
 	return currentNode.value
 
 def testQ5():
-	print("expected outcome: 'four'")
+	print("Q5 test1: m=6: expected outcome: 'four'")
 	print(str(question5(n1, 6)))
-	print("expected outcome: 'ten'")
+	print("Q5 test2: m=0: outcome: 'ten'")
 	print(str(question5(n1, 0)))
-	print("expected outcome: 'n is not a node object'")
+	print("Q5 test 3, n is not node. expected outcome: 'n is not a node object'")
 	print(str(question5(1, 1)))
-	print("expected outcome: 'm is not int'")
+	print("Q5 test 4, m is not int. expected outcome: 'm is not int'")
 	print(str(question5(n1, "1")))
 
 testQ5()
