@@ -201,7 +201,7 @@ testQ3()
 # Solution inspired by (nothing copied from) GeneDer's solution on Github https://github.com/GeneDer/Technical-Interview/blob/master/Solutions.py
 # Solution employs a tree data structure which is similar to that shown in the Udacity fsnd videos on trees, rather than the matrix format defined in the question.
 # This solution was employed because this tree data structure is more elegant and easier to traverse than the matrix.
-# Define node class which inherits class object. Every node in a tree has a value, a smaller left child, and a larger right child. Both children are initialized to type Node.
+# Define node class which inherits class object. Every node in a tree has a value, a smaller left child, and a larger right child. Both children are initialized to type None.
 # A tree is created by defining a series of Node objects which are chained together
 class Node(object):
 	def __init__(self, value):
