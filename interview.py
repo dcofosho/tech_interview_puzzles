@@ -198,101 +198,63 @@ testQ3()
 
 ############ Question 4 #####################
 # Find least common ancestor (LCA) of two nodes in a binary search tree
-# Solution inspired by (nothing copied from) GeneDer's solution on Github https://github.com/GeneDer/Technical-Interview/blob/master/Solutions.py
-# Solution employs a tree data structure which is similar to that shown in the Udacity fsnd videos on trees, rather than the matrix format defined in the question.
-# This solution was employed because this tree data structure is more elegant and easier to traverse than the matrix.
-# Define node class which inherits class object. Every node in a tree has a value, a smaller left child, and a larger right child. Both children are initialized to type None.
-# A tree is created by defining a series of Node objects which are chained together
-class Node(object):
-	def __init__(self, value):
-		self.value = value
-		self.left = None
-		self.right = None
+def findChildren(n):
+	children = []
+	x = 0
+	for each in n:
+		if each == 1:
+			children.append(x)
+		x +=1 
+	return children
+print("findChildren: "+str(findChildren([0,0,1,1])))
 
-# bst_search function searches if n is in the tree
-def bst_search(r, n):
-	current_node = r
-	while current_node.left != None or current_node.right != None:
-		# go left if current node is greater than n
-		if current_node.value > n:
-			if current_node.left != None:
-				current_node = current_node.left
-			else:
-				return False
-		# go right if current node is less than n
-		elif current_node.value < n:
-			# make sure right node exist
-			if current_node.right != None:
-				current_node = current_node.right
-			else:
-				return False
-		# if current node is n, return True
-		else:
-			return True
-	# if n is a leaf return true
-	if current_node.value == n:
-		return True
-	else:
-		return False
+def findRight(n):
+	children = findChildren(n)
+	return children[-1]
 
-def question4(r, n1, n2):
-	# make sure r is a node object
-	if type(r) != Node:
-		return "r not properly formatted"
+def findLeft(n):
+	children = findChildren(n)
+	return children[0]
+
+print("Find Right: "+ str(findRight([0,0,1,1])))
+print("Find Left: "+ str(findLeft([0,0,1,1])))
+
+def question4(m, r, n1, n2):
+	nodeIndex = r
+	root = m[nodeIndex]
 	# make sure n1 and n2 are integers
 	if type(n1) != int:
 		return "n1 not int"
 	if type(n2) != int:
 		return "n2 not int"
-	# make sure n1 and n2 in the tree
-	if not bst_search(r, n1):
-		return "n1 not in tree"
-	if not bst_search(r, n2):
-		return "n2 not in tree"
 	#Traverse tree starting at root
-	current_node = r
-	while current_node.left != None or current_node.right != None: 
+	current_node = root
+	while findLeft(current_node) != None or findRight(current_node) != None: 
 		# if the current node is greater than both n1 and n2, go left
-		if current_node.value > n1 and current_node.value > n2:
-			current_node = current_node.left
+		if nodeIndex > n1 and nodeIndex > n2:
+			nodeIndex = findLeft(currentNode)
+			current_node = m[nodeIndex]
 		# if the current node is less than both n1 and n2, go left
-		elif current_node.value < n1 and current_node.value < n2:
-			current_node = current_node.right
+		elif nodeIndex < n1 and nodeIndex < n2:
+			nodeIndex = findRight(currentNode)
+			current_node = m[nodeIndex]
 		# If the current node is between n1 and n2, the current node is the lca
 		else:
 			#print(str(current_node.value))
-			return current_node.value
+			return nodeIndex
 	#print(str(current_node.value))
-	return current_node.value
-
+	return nodeIndex
 ####Chain together node objects to construct a tree for test purposes
 
-#root
-r = Node(9)							#     			 9     
-#row 1									 			/ \
-n5 = Node(5)						#   		   /   \
-n15 = Node(15)						#  			  5    15
-r.left = n5							#			 / \   / \
-r.right = n15						#			/	\ /	  \
-#row 2								#		   3	7 10   16
-n3 = Node(3)						
-n7 = Node(7)
-n10 = Node(10)
-n16 = Node(16)
-n5.left = n3
-n5.right = n7
-n15.left = n10
-n15.right = n16
-
 def test4():
-	print("Q4 test1: r not Node type:", "Pass" if "r not properly formatted" == question4(747, 5, 15) else "Fail")
-	print("Q4 test2: n1 not int", "Pass" if "n1 not int" == question4(r, "5", 15) else "Fail")
-	print("Q4 test3: n2 not int", "Pass" if "n2 not int" == question4(r, 5, "15") else "Fail")
-	print("Q4 test4: n1 not in the tree:", "Pass" if "n1 not in tree" == question4(r, 77, 5) else "Fail")
-	print("Q4 test5: n1 = 3 and n2 = 15:", "Pass" if 9 == question4(r, 3, 15) else "Fail") 
-	print("Q4 test6: n1 = 7 and n2 = 10", "Pass" if 9 == question4(r, 7, 10) else "Fail")
-	print("Q4 test7: n1 = 10 and n2 = 16", "Pass" if 15 == question4(r, 10, 16) else "Fail")
-	print("Q4 test8: n1 = 5 and n2 = 9", "Pass" if 9 == question4(r, 5, 9) else "Fail")
+	print("TEST4: Should return 3"+"\n"+str(question4([[0, 1, 0, 0, 0],
+           [0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0],
+           [1, 0, 0, 0, 1],
+           [0, 0, 0, 0, 0]],
+          3,
+          1,
+          4)))
 
 test4()
 
